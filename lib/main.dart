@@ -32,6 +32,7 @@ class MainScreen extends StatelessWidget {
       ),
       body: Center(
         child: Column(
+
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             ElevatedButton(
@@ -58,6 +59,8 @@ class MainScreen extends StatelessWidget {
           ],
         ),
       ),
+
+
     );
   }
 }

@@ -1,3 +1,4 @@
+// lib/database_helper.dart
 import 'package:sqflite/sqflite.dart';
 import 'package:path/path.dart';
 import 'Carta.dart';
@@ -15,22 +16,31 @@ class DatabaseHelper {
     return _database!;
   }
 
-  _initDatabase() async {
+  Future<Database> _initDatabase() async {
     String path = join(await getDatabasesPath(), 'tasks.db');
-    return await openDatabase(path, version: 1, onCreate: (db, version) async {
-      await db.execute('''
-        CREATE TABLE tasks(
-          id INTEGER PRIMARY KEY AUTOINCREMENT,
-          title TEXT,
-          description TEXT
-        )
-      ''');
-    });
+    return await openDatabase(
+      path,
+      version: 2, // Increment the version number
+      onCreate: _onCreate,
+      onUpgrade: _onUpgrade,
+    );
   }
 
-  Future<int> insertCarta(Carta task) async {
-    final db = await database;
-    return await db.insert('tasks', task.toMap());
+  Future<void> _onCreate(Database db, int version) async {
+    await db.execute('''
+      CREATE TABLE tasks (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        title TEXT,
+        description TEXT,
+        fechaHora TEXT
+      )
+    ''');
+  }
+
+  Future<void> _onUpgrade(Database db, int oldVersion, int newVersion) async {
+    if (oldVersion < 2) {
+      await db.execute('ALTER TABLE tasks ADD COLUMN fechaHora TEXT');
+    }
   }
 
   Future<List<Carta>> getCarta() async {
@@ -51,12 +61,13 @@ class DatabaseHelper {
     );
   }
 
-  Future<int> deleteCarta(int id) async {
+  Future<void> insertCarta(Carta carta) async {
     final db = await database;
-    return await db.delete(
-      'tasks',
-      where: 'id = ?',
-      whereArgs: [id],
-    );
+    await db.insert('tasks', carta.toMap(), conflictAlgorithm: ConflictAlgorithm.replace);
+  }
+
+  Future<void> deleteCarta(int id) async {
+    final db = await database;
+    await db.delete('tasks', where: 'id = ?', whereArgs: [id]);
   }
 }

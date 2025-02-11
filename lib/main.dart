@@ -39,7 +39,6 @@ class MainScreen extends StatelessWidget {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Image.asset('assets/images/logoDiario.png', width: 100, height: 100),
             ElevatedButton(
               onPressed: () {
                 // Navegar a la pantalla de inicio de sesión

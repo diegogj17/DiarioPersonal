@@ -37,9 +37,9 @@ class MainScreen extends StatelessWidget {
       ),
       body: Center(
         child: Column(
-
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
+            Image.asset('DiarioPersonal/Images/logoDiario.png', width: 100, height: 100),
             ElevatedButton(
               onPressed: () {
                 // Navegar a la pantalla de inicio de sesión
@@ -64,8 +64,6 @@ class MainScreen extends StatelessWidget {
           ],
         ),
       ),
-
-
     );
   }
 }

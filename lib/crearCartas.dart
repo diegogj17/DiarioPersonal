@@ -31,6 +31,7 @@ class _crearCartasState extends State<crearCartas> {
         id: widget.task?.id,
         title: _titleController.text,
         description: _descriptionController.text,
+        fechaHora: DateTime.now(),
       );
 
       if (widget.task == null) {

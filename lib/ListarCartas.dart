@@ -1,4 +1,6 @@
+// lib/ListarCartas.dart
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'database_helper.dart';
 import 'Carta.dart';
 import 'crearCartas.dart';
@@ -32,9 +34,10 @@ class _ListarCartasState extends State<ListarCartas> {
         itemCount: _carta.length,
         itemBuilder: (context, index) {
           final task = _carta[index];
+          final formattedDate = DateFormat('dd/MM/yyyy HH:mm').format(task.fechaHora);
           return ListTile(
             title: Text(task.title),
-            subtitle: Text(task.description),
+            subtitle: Text('${task.description}\nFecha y hora: $formattedDate'),
             onTap: () {
               Navigator.push(
                 context,

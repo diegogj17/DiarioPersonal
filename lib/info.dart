@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'interfaz.dart';
+import 'ListarCartas.dart';
+
 
 class InfoScreen extends StatelessWidget {
   final String email;
@@ -31,7 +32,7 @@ class InfoScreen extends StatelessWidget {
                 Navigator.pushReplacement(
                   context,
                   MaterialPageRoute(
-                    builder: (context) => MyApp(),
+                    builder: (context) => ListarCartas(),
                   ),
                 );
               },

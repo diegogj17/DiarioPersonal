@@ -4,6 +4,7 @@ import 'package:login/admin_dashboard.dart';
 import 'info.dart';
 import 'register.dart';
 import 'user_dashboard.dart'; // Importa la pantalla para cambiar contraseña
+import 'ListarCartas.dart';
 
 class LoginScreen extends StatefulWidget {
   @override
@@ -34,7 +35,7 @@ class _LoginScreenState extends State<LoginScreen> {
         Navigator.pushReplacement(
           context,
           MaterialPageRoute(
-            builder: (context) => AdminDashboard(),
+            builder: (context) => ListarCartas(),
           ),
         );
       } on FirebaseAuthException catch (e) {

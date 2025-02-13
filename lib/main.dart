@@ -3,8 +3,8 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'firebase_options.dart';
 import 'package:sqflite_common_ffi/sqflite_ffi.dart';
-import 'login.dart'; // Archivo para iniciar sesión
-import 'register.dart'; // Archivo para registrarse
+import 'login.dart';
+import 'register.dart';
 
 void main() async {
   // Initialize FFI

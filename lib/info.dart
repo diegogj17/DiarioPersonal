@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'ListarCartas.dart';
 
-
 class InfoScreen extends StatelessWidget {
   final String email;
 

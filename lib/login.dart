@@ -25,8 +25,8 @@ class _LoginScreenState extends State<LoginScreen> {
       });
 
       try {
-        UserCredential userCredential = await FirebaseAuth.instance
-            .signInWithEmailAndPassword(
+        UserCredential userCredential =
+            await FirebaseAuth.instance.signInWithEmailAndPassword(
           email: _emailController.text.trim(),
           password: _passwordController.text.trim(),
         );
@@ -112,9 +112,9 @@ class _LoginScreenState extends State<LoginScreen> {
               _isLoading
                   ? CircularProgressIndicator()
                   : ElevatedButton(
-                onPressed: _loginUser,
-                child: Text("Iniciar Sesión"),
-              ),
+                      onPressed: _loginUser,
+                      child: Text("Iniciar Sesión"),
+                    ),
               SizedBox(height: 20),
               TextButton(
                 onPressed: () {

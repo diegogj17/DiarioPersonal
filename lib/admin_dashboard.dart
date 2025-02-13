@@ -8,7 +8,6 @@ class AdminDashboard extends StatefulWidget {
 }
 
 class _AdminDashboardState extends State<AdminDashboard> {
-
   final List<Map<String, String>> _users = [
     {'email': 'user1@example.com'},
     {'email': 'dsotovictoriafp@gmail.com'},

@@ -7,7 +7,6 @@ import 'login.dart';
 import 'register.dart';
 
 void main() async {
-  // Initialize FFI
   sqfliteFfiInit();
   databaseFactory = databaseFactoryFfi;
 
@@ -24,16 +23,16 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
-        primaryColor: Colors.green, // Color principal
-        scaffoldBackgroundColor: Colors.white, // Fondo de la app
+        primaryColor: Colors.green,
+        scaffoldBackgroundColor: Colors.white,
         appBarTheme: AppBarTheme(
-          backgroundColor: Colors.green, // Color del AppBar
-          foregroundColor: Colors.white, // Color del texto en el AppBar
+          backgroundColor: Colors.green,
+          foregroundColor: Colors.white,
         ),
         elevatedButtonTheme: ElevatedButtonThemeData(
           style: ElevatedButton.styleFrom(
-            backgroundColor: Colors.green, // Color de los botones
-            foregroundColor: Colors.white, // Color del texto en botones
+            backgroundColor: Colors.green,
+            foregroundColor: Colors.white,
             padding: EdgeInsets.symmetric(horizontal: 20, vertical: 12),
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(10),
@@ -50,35 +49,24 @@ class MainScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text("Bienvenido a tu Diario Personal"),
-      ),
+      appBar: AppBar(title: const Text("Bienvenido a tu Diario Personal")),
       body: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Image.asset(
-              'assets/images/logo.png',
-              width: 150,
-            ),
+            Image.asset('assets/images/logo.png', width: 150),
             SizedBox(height: 20),
             ElevatedButton(
-              onPressed: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => LoginScreen()),
-                );
-              },
+              onPressed: () => Navigator.push(
+                context, MaterialPageRoute(builder: (context) => LoginScreen()),
+              ),
               child: const Text("Iniciar Sesión"),
             ),
             SizedBox(height: 20),
             ElevatedButton(
-              onPressed: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => RegisterScreen()),
-                );
-              },
+              onPressed: () => Navigator.push(
+                context, MaterialPageRoute(builder: (context) => RegisterScreen()),
+              ),
               child: const Text("Registrarse"),
             ),
           ],

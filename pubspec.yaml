@@ -36,7 +36,7 @@ flutter_launcher_icons:
   android: true
   ios: true
   windows: true
-  image_path: "assets/images/logo.png"
+  image_path: "assets/images/logo.ico"
 
 flutter:
   uses-material-design: true

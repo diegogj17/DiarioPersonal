@@ -89,7 +89,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
               SizedBox(height: 20),
               Text(
                 _message,
-                style: TextStyle(color: Colors.blue),
+                style: TextStyle(color: Colors.green),
                 textAlign: TextAlign.center,
               ),
             ],

@@ -23,6 +23,24 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
+      theme: ThemeData(
+        primaryColor: Colors.green, // Color principal
+        scaffoldBackgroundColor: Colors.white, // Fondo de la app
+        appBarTheme: AppBarTheme(
+          backgroundColor: Colors.green, // Color del AppBar
+          foregroundColor: Colors.white, // Color del texto en el AppBar
+        ),
+        elevatedButtonTheme: ElevatedButtonThemeData(
+          style: ElevatedButton.styleFrom(
+            backgroundColor: Colors.green, // Color de los botones
+            foregroundColor: Colors.white, // Color del texto en botones
+            padding: EdgeInsets.symmetric(horizontal: 20, vertical: 12),
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(10),
+            ),
+          ),
+        ),
+      ),
       home: MainScreen(),
     );
   }
@@ -33,15 +51,19 @@ class MainScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text("Bienvenido"),
+        title: const Text("Bienvenido a tu Diario Personal"),
       ),
       body: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
+            Image.asset(
+              'assets/images/logo.png',
+              width: 150,
+            ),
+            SizedBox(height: 20),
             ElevatedButton(
               onPressed: () {
-                // Navegar a la pantalla de inicio de sesión
                 Navigator.push(
                   context,
                   MaterialPageRoute(builder: (context) => LoginScreen()),
@@ -52,7 +74,6 @@ class MainScreen extends StatelessWidget {
             SizedBox(height: 20),
             ElevatedButton(
               onPressed: () {
-                // Navegar a la pantalla de registro
                 Navigator.push(
                   context,
                   MaterialPageRoute(builder: (context) => RegisterScreen()),

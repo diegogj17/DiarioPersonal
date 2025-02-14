@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'firebase_options.dart';
 import 'info.dart';
 
 class RegisterScreen extends StatefulWidget {
@@ -13,25 +11,42 @@ class _RegisterScreenState extends State<RegisterScreen> {
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
   final _formKey = GlobalKey<FormState>();
-  String _message = '';
+  bool _isLoading = false;
+  String? _errorMessage;
 
   Future<void> _register() async {
     if (_formKey.currentState!.validate()) {
+      setState(() {
+        _isLoading = true;
+        _errorMessage = null;
+      });
+
       try {
-        final userCredential = await FirebaseAuth.instance.createUserWithEmailAndPassword(
+        final userCredential =
+        await FirebaseAuth.instance.createUserWithEmailAndPassword(
           email: _emailController.text.trim(),
           password: _passwordController.text.trim(),
         );
-        // Redirigir al archivo info.dart
+
         Navigator.pushReplacement(
           context,
           MaterialPageRoute(
             builder: (context) => InfoScreen(email: userCredential.user!.email!),
           ),
         );
-      } catch (e) {
+      } on FirebaseAuthException catch (e) {
         setState(() {
-          _message = 'Error al registrar usuario: $e';
+          if (e.code == 'email-already-in-use') {
+            _errorMessage = 'Este correo ya está registrado.';
+          } else if (e.code == 'weak-password') {
+            _errorMessage = 'La contraseña es demasiado débil.';
+          } else {
+            _errorMessage = 'Error: ${e.message}';
+          }
+        });
+      } finally {
+        setState(() {
+          _isLoading = false;
         });
       }
     }
@@ -40,9 +55,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text("Registro de Usuario"),
-      ),
+      appBar: AppBar(title: Text("Registro de Usuario")),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Form(
@@ -52,14 +65,17 @@ class _RegisterScreenState extends State<RegisterScreen> {
             children: [
               TextFormField(
                 controller: _emailController,
-                decoration: InputDecoration(labelText: "Correo Electrónico"),
+                decoration: InputDecoration(
+                  labelText: "Correo Electrónico",
+                  border: OutlineInputBorder(),
+                ),
                 keyboardType: TextInputType.emailAddress,
                 validator: (value) {
                   if (value == null || value.isEmpty) {
-                    return "Por favor, ingresa un correo electrónico.";
-                  } else if (!RegExp(r"^[a-zA-Z0-9.a-zA-Z0-9._%-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$")
-                      .hasMatch(value)) {
-                    return "Ingresa un correo electrónico válido.";
+                    return "Por favor, ingresa un correo.";
+                  }
+                  if (!RegExp(r"^[^@]+@[^@]+\.[^@]+").hasMatch(value)) {
+                    return "Ingresa un correo válido.";
                   }
                   return null;
                 },
@@ -67,28 +83,35 @@ class _RegisterScreenState extends State<RegisterScreen> {
               SizedBox(height: 16),
               TextFormField(
                 controller: _passwordController,
-                decoration: InputDecoration(labelText: "Contraseña"),
+                decoration: InputDecoration(
+                  labelText: "Contraseña",
+                  border: OutlineInputBorder(),
+                ),
                 obscureText: true,
                 validator: (value) {
                   if (value == null || value.isEmpty) {
                     return "Por favor, ingresa una contraseña.";
-                  } else if (value.length < 6) {
+                  }
+                  if (value.length < 6) {
                     return "La contraseña debe tener al menos 6 caracteres.";
                   }
                   return null;
                 },
               ),
               SizedBox(height: 20),
-              ElevatedButton(
+              _isLoading
+                  ? CircularProgressIndicator()
+                  : ElevatedButton(
                 onPressed: _register,
                 child: Text("Registrar"),
               ),
-              SizedBox(height: 20),
-              Text(
-                _message,
-                style: TextStyle(color: Colors.blue),
-                textAlign: TextAlign.center,
-              ),
+              if (_errorMessage != null) ...[
+                SizedBox(height: 10),
+                Text(
+                  _errorMessage!,
+                  style: TextStyle(color: Colors.red),
+                ),
+              ],
             ],
           ),
         ),

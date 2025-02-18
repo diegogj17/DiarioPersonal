@@ -1,6 +1,7 @@
 // lib/database_helper.dart
 import 'package:sqflite/sqflite.dart';
 import 'package:path/path.dart';
+
 import 'Carta.dart';
 
 class DatabaseHelper {
@@ -17,10 +18,10 @@ class DatabaseHelper {
   }
 
   Future<Database> _initDatabase() async {
-    String path = join(await getDatabasesPath(), 'cartas.db');
+    String path = join(await getDatabasesPath(), 'diario.db');
     return await openDatabase(
       path,
-      version: 2, // Increment the version number
+      version: 2, // Increment the version number if needed
       onCreate: _onCreate,
       onUpgrade: _onUpgrade,
     );
@@ -29,10 +30,15 @@ class DatabaseHelper {
   Future<void> _onCreate(Database db, int version) async {
     await db.execute('''
       CREATE TABLE cartas (
-        id INTEGER PRIMARY KEY AUTOINCREMENT,
-        title TEXT,
         description TEXT,
         fechaHora TEXT
+      )
+    ''');
+    await db.execute('''
+      CREATE TABLE usuarios (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        email TEXT UNIQUE,
+        password TEXT
       )
     ''');
   }
@@ -41,6 +47,21 @@ class DatabaseHelper {
     if (oldVersion < 2) {
       await db.execute('ALTER TABLE cartas ADD COLUMN fechaHora TEXT');
     }
+  }
+
+  Future<void> insertUsuario(String email, String password) async {
+    final db = await database;
+    await db.insert('usuarios', {'email': email, 'password': password}, conflictAlgorithm: ConflictAlgorithm.replace);
+  }
+
+  Future<bool> loginUsuario(String email, String password) async {
+    final db = await database;
+    final List<Map<String, dynamic>> maps = await db.query(
+      'usuarios',
+      where: 'email = ? AND password = ?',
+      whereArgs: [email, password],
+    );
+    return maps.isNotEmpty;
   }
 
   Future<List<Carta>> getCarta() async {

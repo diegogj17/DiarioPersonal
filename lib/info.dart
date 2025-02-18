@@ -1,10 +1,12 @@
+// lib/info.dart
 import 'package:flutter/material.dart';
 import 'ListarCartas.dart';
 
 class InfoScreen extends StatelessWidget {
   final String email;
+  final int userId;
 
-  InfoScreen({required this.email});
+  InfoScreen({required this.email, required this.userId});
 
   @override
   Widget build(BuildContext context) {
@@ -31,7 +33,7 @@ class InfoScreen extends StatelessWidget {
                 Navigator.pushReplacement(
                   context,
                   MaterialPageRoute(
-                    builder: (context) => ListarCartas(),
+                    builder: (context) => ListarCartas(userId: userId),
                   ),
                 );
               },

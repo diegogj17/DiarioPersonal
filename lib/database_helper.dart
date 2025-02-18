@@ -12,7 +12,6 @@ class DatabaseHelper {
   DatabaseHelper._internal();
 
   Future<Database> get database async {
-    if (_database != null) return _database!;
     _database = await _initDatabase();
     return _database!;
   }
@@ -21,7 +20,7 @@ class DatabaseHelper {
     String path = join(await getDatabasesPath(), 'diario.db');
     return await openDatabase(
       path,
-      version: 2, // Increment the version number if needed
+      version: 2,
       onCreate: _onCreate,
       onUpgrade: _onUpgrade,
     );
@@ -32,8 +31,8 @@ class DatabaseHelper {
       CREATE TABLE cartas (
         id INTEGER PRIMARY KEY AUTOINCREMENT,
         title TEXT,
-        description TEXT,
-        fechaHora TEXT
+        fechaHora TEXT,
+        userId INTEGER FOREIGN KEY REFERENCES usuarios(id)
       )
     ''');
     await db.execute('''
@@ -51,24 +50,33 @@ class DatabaseHelper {
     }
   }
 
-  Future<void> insertUsuario(String email, String password) async {
+  Future<int?> insertUsuario(String email, String password) async {
     final db = await database;
-    await db.insert('usuarios', {'email': email, 'password': password}, conflictAlgorithm: ConflictAlgorithm.replace);
+    final id = await db.insert('usuarios', {'email': email, 'password': password},
+        conflictAlgorithm: ConflictAlgorithm.replace);
+    return id;
   }
 
-  Future<bool> loginUsuario(String email, String password) async {
+  Future<int?> loginUsuario(String email, String password) async {
     final db = await database;
     final List<Map<String, dynamic>> maps = await db.query(
       'usuarios',
       where: 'email = ? AND password = ?',
       whereArgs: [email, password],
     );
-    return maps.isNotEmpty;
+    if (maps.isNotEmpty) {
+      return maps.first['id'] as int?;
+    }
+    return null;
   }
 
-  Future<List<Carta>> getCarta() async {
+  Future<List<Carta>> getCarta(int userId) async {
     final db = await database;
-    final List<Map<String, dynamic>> maps = await db.query('cartas');
+    final List<Map<String, dynamic>> maps = await db.query(
+      'cartas',
+      where: 'userId = ?',
+      whereArgs: [userId],
+    );
     return List.generate(maps.length, (i) {
       return Carta.fromMap(maps[i]);
     });
@@ -86,7 +94,8 @@ class DatabaseHelper {
 
   Future<void> insertCarta(Carta carta) async {
     final db = await database;
-    await db.insert('cartas', carta.toMap(), conflictAlgorithm: ConflictAlgorithm.replace);
+    await db.insert('cartas', carta.toMap(),
+        conflictAlgorithm: ConflictAlgorithm.replace);
   }
 
   Future<void> deleteCarta(int id) async {

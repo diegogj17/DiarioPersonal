@@ -4,8 +4,9 @@ class Carta {
   final String title;
   final String description;
   final DateTime fechaHora;
+  final int? userId;
 
-  Carta({this.id, required this.title, required this.description, required this.fechaHora});
+  Carta({this.id, required this.title, required this.description, required this.fechaHora,required this.userId});
 
   Map<String, dynamic> toMap() {
     return {
@@ -13,6 +14,7 @@ class Carta {
       'title': title,
       'description': description,
       'fechaHora': fechaHora.toIso8601String(),
+      'userId': userId,
     };
   }
 
@@ -22,6 +24,7 @@ class Carta {
       title: map['title'],
       description: map['description'],
       fechaHora: DateTime.parse(map['fechaHora']),
+      userId: map['userId'],
     );
   }
 }

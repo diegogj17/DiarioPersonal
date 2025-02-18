@@ -22,17 +22,19 @@ class _LoginScreenState extends State<LoginScreen> {
         _isLoading = true;
       });
 
-      bool isValid = await DatabaseHelper().loginUsuario(
+      int? loginResult = await DatabaseHelper().loginUsuario(
         _emailController.text.trim(),
         _passwordController.text.trim(),
       );
+
+      bool isValid = loginResult != null && loginResult > 0;
 
       if (isValid) {
         // Redirigir a la pantalla de listar cartas tras iniciar sesión
         Navigator.pushReplacement(
           context,
           MaterialPageRoute(
-            builder: (context) => ListarCartas(),
+            builder: (context) => ListarCartas(userId: loginResult),
           ),
         );
       } else {
@@ -99,9 +101,9 @@ class _LoginScreenState extends State<LoginScreen> {
               _isLoading
                   ? CircularProgressIndicator()
                   : ElevatedButton(
-                onPressed: _loginUser,
-                child: Text("Iniciar Sesión"),
-              ),
+                      onPressed: _loginUser,
+                      child: Text("Iniciar Sesión"),
+                    ),
               SizedBox(height: 20),
               TextButton(
                 onPressed: () {

@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
 import 'database_helper.dart';
 import 'Carta.dart';
+import 'login.dart';
 
 class crearCartas extends StatefulWidget {
   final Carta? task;
+  final int userId;
 
-  crearCartas({this.task});
+  crearCartas({this.task, required this.userId});
 
   @override
   _crearCartasState createState() => _crearCartasState();
@@ -15,6 +17,8 @@ class _crearCartasState extends State<crearCartas> {
   final _formKey = GlobalKey<FormState>();
   final _titleController = TextEditingController();
   final _descriptionController = TextEditingController();
+
+  get userId => userId;
 
   @override
   void initState() {
@@ -32,6 +36,7 @@ class _crearCartasState extends State<crearCartas> {
         title: _titleController.text,
         description: _descriptionController.text,
         fechaHora: DateTime.now(),
+        userId: userId,
       );
 
       if (widget.task == null) {

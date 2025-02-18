@@ -30,6 +30,8 @@ class DatabaseHelper {
   Future<void> _onCreate(Database db, int version) async {
     await db.execute('''
       CREATE TABLE cartas (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        title TEXT,
         description TEXT,
         fechaHora TEXT
       )

@@ -1,10 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:firebase_auth/firebase_auth.dart';
-import 'package:login/admin_dashboard.dart';
-import 'info.dart';
+import 'package:login/database_helper.dart';
+import 'package:login/ListarCartas.dart';
 import 'registro.dart';
-import 'user_dashboard.dart'; // Importa la pantalla para cambiar contraseña
-import 'ListarCartas.dart';
+import 'user_dashboard.dart';
 
 class LoginScreen extends StatefulWidget {
   @override
@@ -24,39 +22,28 @@ class _LoginScreenState extends State<LoginScreen> {
         _isLoading = true;
       });
 
-      try {
-        UserCredential userCredential =
-            await FirebaseAuth.instance.signInWithEmailAndPassword(
-          email: _emailController.text.trim(),
-          password: _passwordController.text.trim(),
-        );
+      bool isValid = await DatabaseHelper().loginUsuario(
+        _emailController.text.trim(),
+        _passwordController.text.trim(),
+      );
 
-        // Redirigir a la pantalla de interfaz tras iniciar sesión
+      if (isValid) {
+        // Redirigir a la pantalla de listar cartas tras iniciar sesión
         Navigator.pushReplacement(
           context,
           MaterialPageRoute(
             builder: (context) => ListarCartas(),
           ),
         );
-      } on FirebaseAuthException catch (e) {
-        String errorMessage;
-
-        if (e.code == 'user-not-found') {
-          errorMessage = 'No se encontró un usuario con este correo.';
-        } else if (e.code == 'wrong-password') {
-          errorMessage = 'Contraseña incorrecta.';
-        } else {
-          errorMessage = 'Ocurrió un error: ${e.message}';
-        }
-
+      } else {
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text(errorMessage)),
+          SnackBar(content: Text('Correo o contraseña incorrectos')),
         );
-      } finally {
-        setState(() {
-          _isLoading = false;
-        });
       }
+
+      setState(() {
+        _isLoading = false;
+      });
     }
   }
 
@@ -112,9 +99,9 @@ class _LoginScreenState extends State<LoginScreen> {
               _isLoading
                   ? CircularProgressIndicator()
                   : ElevatedButton(
-                      onPressed: _loginUser,
-                      child: Text("Iniciar Sesión"),
-                    ),
+                onPressed: _loginUser,
+                child: Text("Iniciar Sesión"),
+              ),
               SizedBox(height: 20),
               TextButton(
                 onPressed: () {

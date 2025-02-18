@@ -1,23 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:firebase_core/firebase_core.dart';
-import 'package:firebase_auth/firebase_auth.dart';
+import 'package:login/database_helper.dart';
 import 'info.dart';
 
-void main() async {
-  WidgetsFlutterBinding.ensureInitialized();
-
-  runApp(MyApp());
-}
-
-class MyApp extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      home: RegisterScreen(),
-    );
-  }
-}
 class RegisterScreen extends StatefulWidget {
   @override
   _RegisterScreenState createState() => _RegisterScreenState();
@@ -32,15 +16,17 @@ class _RegisterScreenState extends State<RegisterScreen> {
   Future<void> _register() async {
     if (_formKey.currentState!.validate()) {
       try {
-        final userCredential = await FirebaseAuth.instance.createUserWithEmailAndPassword(
-          email: _emailController.text.trim(),
-          password: _passwordController.text.trim(),
+        // Registrar el usuario en la base de datos
+        await DatabaseHelper().insertUsuario(
+          _emailController.text.trim(),
+          _passwordController.text.trim(),
         );
+
         // Redirigir al archivo info.dart
         Navigator.pushReplacement(
           context,
           MaterialPageRoute(
-            builder: (context) => InfoScreen(email: userCredential.user!.email!),
+            builder: (context) => InfoScreen(email: _emailController.text.trim()),
           ),
         );
       } catch (e) {

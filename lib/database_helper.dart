@@ -17,7 +17,7 @@ class DatabaseHelper {
   }
 
   Future<Database> _initDatabase() async {
-    String path = join(await getDatabasesPath(), 'tasks.db');
+    String path = join(await getDatabasesPath(), 'cartas.db');
     return await openDatabase(
       path,
       version: 2, // Increment the version number
@@ -28,7 +28,7 @@ class DatabaseHelper {
 
   Future<void> _onCreate(Database db, int version) async {
     await db.execute('''
-      CREATE TABLE tasks (
+      CREATE TABLE cartas (
         id INTEGER PRIMARY KEY AUTOINCREMENT,
         title TEXT,
         description TEXT,
@@ -39,13 +39,13 @@ class DatabaseHelper {
 
   Future<void> _onUpgrade(Database db, int oldVersion, int newVersion) async {
     if (oldVersion < 2) {
-      await db.execute('ALTER TABLE tasks ADD COLUMN fechaHora TEXT');
+      await db.execute('ALTER TABLE cartas ADD COLUMN fechaHora TEXT');
     }
   }
 
   Future<List<Carta>> getCarta() async {
     final db = await database;
-    final List<Map<String, dynamic>> maps = await db.query('tasks');
+    final List<Map<String, dynamic>> maps = await db.query('cartas');
     return List.generate(maps.length, (i) {
       return Carta.fromMap(maps[i]);
     });
@@ -54,7 +54,7 @@ class DatabaseHelper {
   Future<int> updateCarta(Carta task) async {
     final db = await database;
     return await db.update(
-      'tasks',
+      'cartas',
       task.toMap(),
       where: 'id = ?',
       whereArgs: [task.id],
@@ -63,11 +63,11 @@ class DatabaseHelper {
 
   Future<void> insertCarta(Carta carta) async {
     final db = await database;
-    await db.insert('tasks', carta.toMap(), conflictAlgorithm: ConflictAlgorithm.replace);
+    await db.insert('cartas', carta.toMap(), conflictAlgorithm: ConflictAlgorithm.replace);
   }
 
   Future<void> deleteCarta(int id) async {
     final db = await database;
-    await db.delete('tasks', where: 'id = ?', whereArgs: [id]);
+    await db.delete('cartas', where: 'id = ?', whereArgs: [id]);
   }
 }

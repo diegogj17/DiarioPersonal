@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:login/admin_dashboard.dart';
 import 'info.dart';
-import 'register.dart';
+import 'registro.dart';
 import 'user_dashboard.dart'; // Importa la pantalla para cambiar contraseña
 import 'ListarCartas.dart';
 

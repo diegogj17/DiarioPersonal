@@ -17,16 +17,19 @@ class _RegisterScreenState extends State<RegisterScreen> {
     if (_formKey.currentState!.validate()) {
       try {
         // Registrar el usuario en la base de datos
-        await DatabaseHelper().insertUsuario(
+        final userId = await DatabaseHelper().insertUsuario(
           _emailController.text.trim(),
           _passwordController.text.trim(),
         );
 
-        // Redirigir al archivo info.dart
+        // Redirigir al archivo info.dart con el userId
         Navigator.pushReplacement(
           context,
           MaterialPageRoute(
-            builder: (context) => InfoScreen(email: _emailController.text.trim()),
+            builder: (context) => InfoScreen(
+              email: _emailController.text.trim(),
+              userId: userId!,
+            ),
           ),
         );
       } catch (e) {
@@ -57,7 +60,8 @@ class _RegisterScreenState extends State<RegisterScreen> {
                 validator: (value) {
                   if (value == null || value.isEmpty) {
                     return "Por favor, ingresa un correo electrónico.";
-                  } else if (!RegExp(r"^[a-zA-Z0-9.a-zA-Z0-9._%-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$")
+                  } else if (!RegExp(
+                          r"^[a-zA-Z0-9.a-zA-Z0-9._%-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$")
                       .hasMatch(value)) {
                     return "Ingresa un correo electrónico válido.";
                   }

@@ -26,7 +26,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
         Navigator.pushReplacement(
           context,
           MaterialPageRoute(
-            builder: (context) => InfoScreen(email: _emailController.text.trim()),
+            builder: (context) => InfoScreen(email: _emailController.text.trim()patata),
           ),
         );
       } catch (e) {

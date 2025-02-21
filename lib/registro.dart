@@ -21,12 +21,12 @@ class _RegisterScreenState extends State<RegisterScreen> {
           _emailController.text.trim(),
           _passwordController.text.trim(),
         );
-
+        var id=await DatabaseHelper().idPorEmail(_emailController.text.trim());
         // Redirigir al archivo info.dart
         Navigator.pushReplacement(
           context,
           MaterialPageRoute(
-            builder: (context) => InfoScreen(email: _emailController.text.trim()patata),
+            builder: (context) => InfoScreen(email: _emailController.text.trim(), userId: id,),
           ),
         );
       } catch (e) {

@@ -6,6 +6,7 @@ import 'Carta.dart';
 
 class DatabaseHelper {
   static final DatabaseHelper _instance = DatabaseHelper._internal();
+
   factory DatabaseHelper() => _instance;
   static Database? _database;
 
@@ -28,20 +29,36 @@ class DatabaseHelper {
 
   Future<void> _onCreate(Database db, int version) async {
     await db.execute('''
-      CREATE TABLE cartas (
-        id INTEGER PRIMARY KEY AUTOINCREMENT,
-        title TEXT,
-        fechaHora TEXT,
-        userId INTEGER FOREIGN KEY REFERENCES usuarios(id)
-      )
-    ''');
-    await db.execute('''
       CREATE TABLE usuarios (
         id INTEGER PRIMARY KEY AUTOINCREMENT,
-        email TEXT UNIQUE,
+        email TEXT,
         password TEXT
       )
     ''');
+
+    await db.execute('''
+      CREATE TABLE cartas (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        title TEXT,
+        description TEXT,
+        fechaHora TEXT,
+        userId INTEGER,
+        FOREIGN KEY (userId) REFERENCES usuarios(id)
+      )
+    ''');
+  }
+
+  Future<int> idPorEmail(String email) async {
+    final db = await database;
+    final List<Map<String, dynamic>> maps = await db.query(
+      'usuarios',
+      where: 'email = ?',
+      whereArgs: [email],
+    );
+    if (maps.isNotEmpty) {
+      return maps.first['id'] as int;
+    }
+    return 0;
   }
 
   Future<void> _onUpgrade(Database db, int oldVersion, int newVersion) async {
@@ -52,7 +69,8 @@ class DatabaseHelper {
 
   Future<int?> insertUsuario(String email, String password) async {
     final db = await database;
-    final id = await db.insert('usuarios', {'email': email, 'password': password},
+    final id = await db.insert(
+        'usuarios', {'email': email, 'password': password},
         conflictAlgorithm: ConflictAlgorithm.replace);
     return id;
   }

@@ -18,7 +18,7 @@ class _crearCartasState extends State<crearCartas> {
   final _titleController = TextEditingController();
   final _descriptionController = TextEditingController();
 
-  get userId => userId;
+
 
   @override
   void initState() {
@@ -30,6 +30,7 @@ class _crearCartasState extends State<crearCartas> {
   }
 
   void _saveTask() async {
+    final userId = widget.userId;
     if (_formKey.currentState!.validate()) {
       final carta = Carta(
         id: widget.task?.id,

@@ -18,7 +18,7 @@ class ListarCartas extends StatefulWidget {
 class _ListarCartasState extends State<ListarCartas> {
   List<Carta> _carta = [];
 
-  int get userId => userId;
+
 
   @override
   void initState() {
@@ -28,6 +28,7 @@ class _ListarCartasState extends State<ListarCartas> {
   }
 
   Future<void> _loadCarta() async {
+    int userId = widget.userId;
     final data = await DatabaseHelper().getCarta(userId);
     setState(() {
       _carta = data;
@@ -36,6 +37,7 @@ class _ListarCartasState extends State<ListarCartas> {
 
   @override
   Widget build(BuildContext context) {
+    int userId = widget.userId;
     return Scaffold(
       appBar: AppBar(title: Text('Diario de Cartas')),
       body: ListView.builder(
